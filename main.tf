@@ -123,7 +123,7 @@ resource "aws_instance" "chef-server" {
   connection {
     host           = "${self.public_ip}"
     user           = "${lookup(var.ami_usermap, var.ami_os)}"
-    private_key    = "${file("${var.instance_key["file"]}")}"
+    private_key    = "${content("${var.instance_key["content"]}")}"
   }
   # Setup
   provisioner "remote-exec" {
@@ -140,28 +140,14 @@ resource "aws_instance" "chef-server" {
   provisioner "remote-exec" {
     script         = "${path.module}/files/chef-cookbooks.sh"
   }
-  # Put certificate key
-  provisioner "file" {
-    source         = "${var.chef_ssl["key"]}"
-    destination    = ".chef/${var.instance["hostname"]}.${var.instance["domain"]}.key"
-  }
-  # Put certificate
-  provisioner "file" {
-    source         = "${var.chef_ssl["cert"]}"
-    destination    = ".chef/${var.instance["hostname"]}.${var.instance["domain"]}.pem"
-  }
-  # Write .chef/dna.json for chef-solo run
+  
+# Write .chef/dna.json for chef-solo run
   provisioner "file" {
     content        = "${data.template_file.attributes-json.rendered}"
     destination    = ".chef/dna.json"
   }
-  # Move certs
-  provisioner "remote-exec" {
-    inline = [
-      "sudo mv .chef/${var.instance["hostname"]}.${var.instance["domain"]}.* /var/chef/ssl/"
-    ]
-  }
-  # Run chef-solo and get us a Chef server
+  
+# Run chef-solo and get us a Chef server
   provisioner "remote-exec" {
     inline = [
       "sudo chef-solo -j .chef/dna.json -o 'recipe[system::default],recipe[chef-server::default],recipe[chef-server::addons]'",
