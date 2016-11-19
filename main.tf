@@ -123,7 +123,7 @@ resource "aws_instance" "chef-server" {
   connection {
     host           = "${self.public_ip}"
     user           = "${lookup(var.ami_usermap, var.ami_os)}"
-    private_key    = "${content("${var.instance_key["content"]}")}"
+    private_key    = "${var.instance_key["content"]}}"
   }
   # Setup
   provisioner "remote-exec" {
