@@ -30,7 +30,7 @@ variable "ami_map" {
   description      = "AMI map of OS/region (2016-03-14)"
   default          = {
     centos7-us-east-1       = "ami-6d1c2007"
-    centos7-us-east-2       = "ami-b0366cd5"
+    centos7-us-east-2       = "ami-6a2d760f"
     centos7-us-west-2       = "ami-d2c924b2"
     centos7-us-west-1       = "ami-af4333cf"
     centos7-eu-central-1    = "ami-9bf712f4"
