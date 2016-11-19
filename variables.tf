@@ -165,6 +165,7 @@ variable "instance_key" {
   description      = "EC2 instance SSH key settings"
   default          = {
     file           = ""
+    content        = ""
     name           = ""
   }
 }
